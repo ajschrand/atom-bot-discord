@@ -1,9 +1,10 @@
+import os
 import discord
 from discord.ext import commands
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='$', intents=intents)
-TOKEN = "NzgyMTU0MTU1NDIyNzc3MzQ1.X8ID0g.1bxThD191cEl8Dzsw0QYGTUNlAg"
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 
 @bot.event
