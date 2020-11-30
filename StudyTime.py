@@ -26,6 +26,16 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
+    # move verification pictures to the staff-only channel vp-pending
+    if message.channel.id == 782844189456990298:
+        if message.attachments != []:
+            vpPending = discord.utils.get(message.guild.channels, id=782845929854205994)
+            # sends the mention, content, and then the first picture they sent to #vp-pending
+            image = await message.attachments[0].to_file()
+            await vpPending.send(message.author.mention + ":\n" + message.content, file=image)
+
+        await message.delete()
+
     # assign major roles
     if message.channel.id == 781280160828751902:
         if message.content.isnumeric():
@@ -51,11 +61,11 @@ async def on_message(message):
         return
 
 
-async def find_last_user_message(member: discord.Member, channel: discord.TextChannel):
+async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
     # find the last sent message from {member} in {channel} if one exists
-    messages = await channel.history(limit=25).flatten()  # get the last 25 messages in {channel} as :list:
+    messages = await channel.history(limit=10).flatten()  # get the last 10 messages in {channel} as :list:
     for message in messages:
-        if message.author is member:
+        if member.mention in message.content:
             return message
     return None
 
@@ -64,30 +74,27 @@ async def find_last_user_message(member: discord.Member, channel: discord.TextCh
 @commands.has_any_role('Helper', 'Manager', 'Corporate', 'CEO')
 async def verify_user(ctx, member: discord.Member, nickname):
     if member in ctx.guild.members:
+        # get necessary roles and channels
+        unverifiedRole = discord.utils.get(ctx.guild.roles, id=752977608060436509)
+        memberRole = discord.utils.get(ctx.guild.roles, id=766382355568525376)
+        vpPending = discord.utils.get(ctx.guild.channels, id=782845929854205994)
+        vpArchive = discord.utils.get(ctx.guild.channels, id=770117019709341716)
+        # find {member}'s verification picture in #vp-pending
+        vp = await find_user_vp(member, vpPending)
 
-        unverifiedRole = discord.utils.get(ctx.guild.roles, name='Unverified')
-        memberRole = discord.utils.get(ctx.guild.roles, name='Member')
+        if vp is not None and unverifiedRole in member.roles:
+            # move {vp}'s content and image to #vp-archive
+            image = await vp.attachments[0].to_file()
+            await vpArchive.send(vp.content, file=image)
+            await vp.delete()
 
-        if unverifiedRole in member.roles:
-            # add Member role, remove Unverified role, change nickname to {nickname}
+            # verifies {member} by removing Unverified, adding Member, and changing nick to {nickname}
             await member.add_roles(memberRole)
             await member.remove_roles(unverifiedRole)
             await member.edit(nick=nickname)
-
-            # get vP as :TextChannel:, find last sent message by {member} in vP
-            verificationPictures = discord.utils.get(ctx.guild.channels, id=770117019709341716)
-            lastMessage = await find_last_user_message(member, verificationPictures)
-
-            # react to {lastMessage} with a thumbs up if it exists
-            # otherwise, notify user that {lastMessage} does not exist
-            if lastMessage is not None:
-                await lastMessage.add_reaction('👍')
-            else:
-                await ctx.send(f'Unable to find a message to react to from {member} in {verificationPictures}')
-
             await ctx.send(f'Successfully verified {member} with the nickname "{nickname}"')
         else:
-            await ctx.send(f'{member.display_name} is already verified.')
+            await ctx.send(f'Unable to verifiy {member}.')
     else:
         await ctx.send(f'{member} does not exist or is not a member of {ctx.guild.name}.')
 
