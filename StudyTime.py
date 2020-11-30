@@ -65,7 +65,7 @@ async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
     # find the last sent message from {member} in {channel} if one exists
     messages = await channel.history(limit=10).flatten()  # get the last 10 messages in {channel} as :list:
     for message in messages:
-        if member.mention in message.content:
+        if str(member.mention) in message.content:
             return message
     return None
 
