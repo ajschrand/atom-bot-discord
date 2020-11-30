@@ -82,7 +82,7 @@ async def verify_user(ctx, member: discord.Member, nickname):
         # find {member}'s verification picture in #vp-pending
         vp = await find_user_vp(member, vpPending)
 
-        if vp is not None and unverifiedRole in member.roles:
+        if vp is not None:
             # move {vp}'s content and image to #vp-archive
             image = await vp.attachments[0].to_file()
             await vpArchive.send(vp.content, file=image)
