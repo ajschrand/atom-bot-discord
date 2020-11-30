@@ -89,8 +89,10 @@ async def verify_user(ctx, member: discord.Member, nickname):
             await vp.delete()
 
             # verifies {member} by removing Unverified, adding Member, and changing nick to {nickname}
-            await member.add_roles(memberRole)
-            await member.remove_roles(unverifiedRole)
+            if unverifiedRole in member.roles:
+                await member.add_roles(memberRole)
+                await member.remove_roles(unverifiedRole)
+
             await member.edit(nick=nickname)
             await ctx.send(f'Successfully verified {member} with the nickname "{nickname}"')
         else:
