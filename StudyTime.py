@@ -34,7 +34,7 @@ async def on_message(message):
             image = await message.attachments[0].to_file()
             await vpPending.send(message.author.mention + ":\n" + message.content, file=image)
 
-        await message.delete()
+        await message.delete(delay=1)
 
     # assign major roles
     if message.channel.id == 781280160828751902:
@@ -86,7 +86,7 @@ async def verify_user(ctx, member: discord.Member, nickname):
             # move {vp}'s content and image to #vp-archive
             image = await vp.attachments[0].to_file()
             await vpArchive.send(vp.content, file=image)
-            await vp.delete()
+            await vp.delete(delay=1)
 
             # verifies {member} by removing Unverified, adding Member, and changing nick to {nickname}
             if unverifiedRole in member.roles:
