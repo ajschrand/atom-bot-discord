@@ -71,7 +71,7 @@ async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
 
 
 @bot.command(name='verify')
-@commands.has_any_role('Mod', 'Admin')
+@commands.has_any_role('Helper', 'Mod', 'Admin')
 async def verify_user(ctx, member: discord.Member, nickname):
     if member in ctx.guild.members:
         # get necessary roles and channels
