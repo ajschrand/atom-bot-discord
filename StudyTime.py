@@ -72,7 +72,7 @@ async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
 
 @bot.command(name='verify')
 @commands.has_any_role('Helper', 'Mod', 'Admin')
-async def verify_user(ctx, member: discord.Member, nickname):
+async def verify_user(ctx, member: discord.Member, nickname=None):
     if member in ctx.guild.members:
         # get necessary roles and channels
         unverifiedRole = discord.utils.get(ctx.guild.roles, id=752977608060436509)
@@ -92,9 +92,12 @@ async def verify_user(ctx, member: discord.Member, nickname):
             if unverifiedRole in member.roles:
                 await member.add_roles(memberRole)
                 await member.remove_roles(unverifiedRole)
-
-            await member.edit(nick=nickname)
-            await ctx.send(f'Successfully verified {member} with the nickname "{nickname}"')
+                
+            if nickname is not None:
+                await member.edit(nick=nickname)
+                await ctx.send(f'Successfully verified {member} with the nickname "{nickname}"')
+            else:
+                await ctx.send(f'Successfully verified {member}')
         else:
             await ctx.send(f'Unable to verifiy {member}.')
     else:
