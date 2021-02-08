@@ -60,7 +60,7 @@ async def on_message(message):
     else:
         return
 
-
+# helper method for verify_user
 async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
     # find the last sent message from {member} in {channel} if one exists
     messages = await channel.history().flatten()  # get the messages in {channel} as :list:
@@ -70,7 +70,9 @@ async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
     return None
 
 
-@bot.command(name='verify')
+# verifies members into NCSU Study Time by removing the role Unverified, Adding the role Member, and optionally
+# changes the member's nickname
+@bot.command(name="verify", aliases=["v"])
 @commands.has_any_role('Helper', 'Mod', 'Admin')
 async def verify_user(ctx, member: discord.Member, nickname=None):
     if member in ctx.guild.members:
@@ -92,16 +94,43 @@ async def verify_user(ctx, member: discord.Member, nickname=None):
             if unverifiedRole in member.roles:
                 await member.add_roles(memberRole)
                 await member.remove_roles(unverifiedRole)
-                
+
+            # if a nickname is provided, changes {member}'s nickname to {nickname}
             if nickname is not None:
                 await member.edit(nick=nickname)
                 await ctx.send(f'Successfully verified {member} with the nickname "{nickname}"')
             else:
                 await ctx.send(f'Successfully verified {member}')
+
+            return True
         else:
-            await ctx.send(f'Unable to verifiy {member}.')
+            await ctx.send(f'Unable to locate a verification picture for {member}.')
+            return False
     else:
         await ctx.send(f'{member} does not exist or is not a member of {ctx.guild.name}.')
+        return False
+
+
+# secondary use case for verify_user. used if the caller wants Atom to send an automated greeting to #general.
+# makes a call to verify_user and, on a succesful verification, sends a greeting to #general.
+@bot.command(name="verifygreet", aliases=["vg", "verifyg"])
+@commands.has_any_role('Helper', 'Mod', 'Admin')
+async def verify_and_greet_user(ctx, member: discord.Member, nickname=None):
+    verificationSuccess = False
+    if nickname is not None:
+        verificationSuccess = await verify_user(ctx, member, nickname)
+    else:
+        verificationSuccess = await verify_user(ctx, member)
+
+    if verificationSuccess is True:
+        general = discord.utils.get(ctx.guild.channels, id=766415730170003487)
+        greetings = [f"Welcome to the server, {member.mention}!",
+                     f"Welcome {member.mention}!",
+                     f"Glad to have you, {member.mention}"
+                     f"Hello and welcome to {member.mention}!"]
+
+        await general.send(random.choice(greetings))
+
 
 
 async def find_category(ctx, categoryName):
@@ -112,8 +141,8 @@ async def find_category(ctx, categoryName):
     return None
 
 
-@bot.command(name='archive')
-@commands.is_owner()
+@bot.command(name='archive', aliases=["a"])
+@commands.has_role('Admin')
 async def archive_text_category(ctx, categoryName, appendText):
     category = await find_category(ctx, categoryName)
 
