@@ -123,7 +123,7 @@ async def verify_and_greet_user(ctx, member: discord.Member, nickname=None):
         verificationSuccess = await verify_user(ctx, member)
 
     if verificationSuccess is True:
-        general = discord.utils.get(ctx.guild.channels, id=766415730170003487)
+        general = discord.utils.get(ctx.guild.channels, id=740958427039268957)
         greetings = [f"Welcome to the server, {member.mention}!",
                      f"Welcome {member.mention}!",
                      f"Glad to have you, {member.mention}"
