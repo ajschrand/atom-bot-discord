@@ -127,7 +127,7 @@ async def verify_and_greet_user(ctx, member: discord.Member, nickname=None):
         general = discord.utils.get(ctx.guild.channels, id=740958427039268957)
         greetings = [f"Welcome to the server, {member.mention}!",
                      f"Welcome {member.mention}!",
-                     f"Glad to have you, {member.mention}"
+                     f"Glad to have you, {member.mention}",
                      f"Hello and welcome to {member.mention}!"]
 
         await general.send(random.choice(greetings))
