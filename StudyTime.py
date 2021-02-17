@@ -71,17 +71,23 @@ async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
     return None
 
 
-# verifies members into NCSU Study Time by removing the role Unverified, Adding the role Member, and optionally
-# changes the member's nickname
+# verifies members into NCSU Study Time by removing the role Unverified, Adding the role Member
+# optionally changes the member's nickname
+# sends an automated greeting message to #general upon successful verification
 @bot.command(name="verify", aliases=["v"])
 @commands.has_any_role('Helper', 'Mod', 'Admin')
 async def verify_user(ctx, member: discord.Member, nickname=None):
+    # only attempts to verify if the passed member is actually in the server
     if member in ctx.guild.members:
-        # get necessary roles and channels
+        # get necessary roles
         unverifiedRole = discord.utils.get(ctx.guild.roles, id=752977608060436509)
         memberRole = discord.utils.get(ctx.guild.roles, id=766382355568525376)
+
+        # get necessary channels
+        general = discord.utils.get(ctx.guild.channels, id=740958427039268957)
         vpPending = discord.utils.get(ctx.guild.channels, id=782845929854205994)
         vpArchive = discord.utils.get(ctx.guild.channels, id=770117019709341716)
+
         # find {member}'s verification picture in #vp-pending
         vp = await find_user_vp(member, vpPending)
 
@@ -103,35 +109,27 @@ async def verify_user(ctx, member: discord.Member, nickname=None):
             else:
                 await ctx.send(f'Successfully verified {member}')
 
-            return True
+            # list of possible greeting messages to be randomly chosen
+            greetings = [f"Welcome to the server, {member.mention}!",
+                         f"Welcome {member.mention}!",
+                         f"Glad to have you, {member.mention}",
+                         f"Hello and welcome to {member.mention}!",
+                         f"Oh shit, it's {member.mention}. Everyone hide!",
+                         f"{member.mention}, this is a Wendy's drive-thru",
+                         f"Hello there. General {member.mention}!",
+                         f"Hi {member.mention}! ||GET OUT WHILE YOU STILL CAN||",
+                         f"I hope you stay longer than @SevenYoshis#7432, {member.mention}",
+                         f"Hey, {member.mention}. You're finally awake.",
+                         f"You aren't a bug, {member.mention}, you're a feature!",
+                         f"Wait, is that *the* {member.mention}?",
+                         f"{member.mention} just arrived! Say hi!"]
+
+            # sends an automated greeting message to #general upon succesful verification
+            await general.send(random.choice(greetings))
         else:
             await ctx.send(f'Unable to locate a verification picture for {member}.')
-            return False
     else:
         await ctx.send(f'{member} does not exist or is not a member of {ctx.guild.name}.')
-        return False
-
-
-# secondary use case for verify_user. used if the caller wants Atom to send an automated greeting to #general.
-# makes a call to verify_user and, on a succesful verification, sends a greeting to #general.
-@bot.command(name="verifygreet", aliases=["vg", "verifyg"])
-@commands.has_any_role('Helper', 'Mod', 'Admin')
-async def verify_and_greet_user(ctx, member: discord.Member, nickname=None):
-    verificationSuccess = False
-    if nickname is not None:
-        verificationSuccess = await verify_user(ctx, member, nickname)
-    else:
-        verificationSuccess = await verify_user(ctx, member)
-
-    if verificationSuccess is True:
-        general = discord.utils.get(ctx.guild.channels, id=740958427039268957)
-        greetings = [f"Welcome to the server, {member.mention}!",
-                     f"Welcome {member.mention}!",
-                     f"Glad to have you, {member.mention}",
-                     f"Hello and welcome to {member.mention}!"]
-
-        await general.send(random.choice(greetings))
-
 
 
 async def find_category(ctx, categoryName):
