@@ -114,15 +114,28 @@ async def verify_user(ctx, member: discord.Member, nickname=None):
                          f"Welcome {member.mention}!",
                          f"Glad to have you, {member.mention}",
                          f"Hello and welcome to {member.mention}!",
+                         f"{member.mention} just arrived! Say hi!",
+                         f"{member.mention} is here to party!",
+                         f"Welcome, {member.mention}. We've been expecting you.",
+                         f"Swoooosh. {member.mention} just landed.",
+                         f"{member.mention} just slid into the server.",
                          f"Oh shit, it's {member.mention}. Everyone hide!",
-                         f"{member.mention}, this is a Wendy's drive-thru",
+                         f"Hellooooo. Is it {member.mention} you're looking fooor.",
+                         f"It's dangerous to go alone, {member.mention}. Good thing you're here now!",
+                         f"Never gonna give {member.mention} up. Never gonna let {member.mention} down.",
+                         f"It's {member.mention}! Praise the sun!",
+                         f"A new challenger approaches: {member.mention}!",
+                         f"Brace yourselves. {member.mention} just joined the server.",
+                         f"A wild {member.mention} appeared!",
+                         f"{member.mention} just joined. Everyone look busy!",
                          f"Hello there. General {member.mention}!",
+                         f"{member.mention}, this is a Wendy's drive-thru",
                          f"Hi {member.mention}! ||GET OUT WHILE YOU STILL CAN||",
                          f"I hope you stay longer than @SevenYoshis#7432, {member.mention}",
                          f"Hey, {member.mention}. You're finally awake.",
                          f"You aren't a bug, {member.mention}, you're a feature!",
                          f"Wait, is that *the* {member.mention}?",
-                         f"{member.mention} just arrived! Say hi!"]
+                         f"{member.mention} joined. Yipee."]
 
             # sends an automated greeting message to #general upon succesful verification
             await general.send(random.choice(greetings))
