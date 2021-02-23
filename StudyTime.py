@@ -135,7 +135,8 @@ async def verify_user(ctx, member: discord.Member, nickname=None):
                          f"Hey, {member.mention}. You're finally awake.",
                          f"You aren't a bug, {member.mention}, you're a feature!",
                          f"Wait, is that *the* {member.mention}?",
-                         f"{member.mention} joined. Yipee."]
+                         f"{member.mention} joined. Yipee.",
+                         f"Hi {member.mention}! Make sure to pick up the Computer Science role at your earliest convience!"]
 
             # sends an automated greeting message to #general upon succesful verification
             await general.send(random.choice(greetings))
