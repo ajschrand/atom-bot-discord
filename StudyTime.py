@@ -75,7 +75,7 @@ async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
 # optionally changes the member's nickname
 # sends an automated greeting message to #general upon successful verification
 @bot.command(name="verify", aliases=["v"])
-@commands.has_any_role('Helper', 'Mod', 'Admin')
+@commands.has_any_role(740963016010367098, 750410563040837694, 740962170077970442)
 async def verify_user(ctx, member: discord.Member, nickname=None):
     # only attempts to verify if the passed member is actually in the server
     if member in ctx.guild.members:
@@ -155,7 +155,7 @@ async def find_category(ctx, categoryName):
 
 
 @bot.command(name='archive', aliases=["a"])
-@commands.has_role('Admin')
+@commands.has_role(740962170077970442)
 async def archive_text_category(ctx, categoryName, appendText):
     category = await find_category(ctx, categoryName)
 
