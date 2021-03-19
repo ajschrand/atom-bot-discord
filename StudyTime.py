@@ -27,8 +27,21 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    # move verification pictures to the staff-only channel vp-pending
-    if message.channel.id == 782844189456990298:
+    if not message.guild:
+        studyTime = None
+        for guild in bot.guilds:
+            if guild.id == 740958427039268954:
+                studyTime = guild
+                break
+
+        if message.content[:6] == "vent: ":
+            vent = discord.utils.get(studyTime.channels, id=746864872221966468)
+            await vent.send(message.content[6:])
+            modlog = discord.utils.get(studyTime.channels, id=822349297915789352)
+            await modlog.send(f'{message.author} - {message.author.id}\n{message.content[6:]}')
+
+    # move verification pictures from vp-input to the staff-only channel vp-pending
+    elif message.channel.id == 782844189456990298:
         if message.attachments != []:
             vpPending = discord.utils.get(message.guild.channels, id=782845929854205994)
             # sends the mention, content, and then the first picture they sent to #vp-pending
@@ -38,7 +51,7 @@ async def on_message(message):
         await message.delete(delay=1)
 
     # assign major roles
-    if message.channel.id == 781280160828751902:
+    elif message.channel.id == 781280160828751902:
         if message.content.isnumeric():
             roleNumber = int(message.content)
             roles = message.guild.roles
@@ -58,9 +71,8 @@ async def on_message(message):
                 await message.channel.send(f'Index "{roleNumber}" is out of range.', delete_after=3)
 
         await message.delete(delay=3)
-    else:
-        return
 
+        
 # helper method for verify_user
 async def find_user_vp(member: discord.Member, channel: discord.TextChannel):
     # find the last sent message from {member} in {channel} if one exists
