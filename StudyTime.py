@@ -19,7 +19,6 @@ async def give_remove_role(member: discord.Member, role: discord.Role):
     elif role not in member.roles:
         await member.add_roles(role)
 
-
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
@@ -34,9 +33,11 @@ async def on_message(message):
                 studyTime = guild
                 break
 
-        if message.content[:6] == "vent: ":
+        if message.content[:6] == "vent: " and message.author in studyTime.members:
             vent = discord.utils.get(studyTime.channels, id=746864872221966468)
             await vent.send(message.content[6:])
+            await message.author.send("Message successfully moved to #vent")
+
             modlog = discord.utils.get(studyTime.channels, id=822349297915789352)
             await modlog.send(f'{message.author} - {message.author.id}\n{message.content[6:]}')
 
