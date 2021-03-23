@@ -72,6 +72,11 @@ async def on_message(message):
                 await message.channel.send(f'Index "{roleNumber}" is out of range.', delete_after=3)
 
         await message.delete(delay=3)
+        
+    # dad bot for jackson
+    elif message.content == "I love you." and message.author.id == 685695945618620431:
+        await message.channel.send("I love you too, son.")
+        return
 
         
 # helper method for verify_user
