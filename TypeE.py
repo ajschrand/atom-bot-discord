@@ -14,6 +14,6 @@ async def on_ready():
 @bot.command(name='cc')
 @commands.is_owner()
 async def coupon_counter(ctx, start_num=0):
-    await ctx.send(f"{start_num}", view=view)
+    await ctx.send(f"{start_num}")
 
 bot.run(TOKEN)
