@@ -1,1 +1,1 @@
-worker: python TypeE.py
+worker: python StudyTime.py
