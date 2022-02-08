@@ -12,7 +12,7 @@ async def on_ready():
     print("Atom is ready.")
 
 
-@bot.command(name='mcr')
+@bot.command(name='cc')
 @commands.is_owner()
 async def coupon_counter(ctx):
     increment_button = Button(label="++", style=discord.ButtonStyle.green)
