@@ -4,7 +4,7 @@ from discord.ui import Button, View
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix='$', intents=intents)
-TOKEN = "NzgyMTU0MTU1NDIyNzc3MzQ1.X8ID0g.LOI_asXYpooCQ27Eq-6LjZ_JbmE"
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 
 @bot.event
