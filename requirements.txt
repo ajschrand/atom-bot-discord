@@ -1,5 +1,5 @@
-discord.py 2.0
+discord.py
+discord-ui
 flask
 PyNaCl
 dnspython
-pycord
