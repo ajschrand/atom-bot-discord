@@ -11,6 +11,15 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 @bot.event
 async def on_ready():
     print("Atom is ready.")
+    
+    
+@bot.command(name='mac')
+@commands.is_owner()
+async def make_all_counters(ctx):
+    for member in ctx.guild.members:
+        await ctx.send(f"{member.mention}")
+        await coupon_counter(ctx)
+
 
 @bot.command(name='cc')
 @commands.is_owner()
