@@ -1,5 +1,4 @@
-discord.py
-discord.ui
+git+https://github.com/Rapptz/discord.py.git
 flask
 PyNaCl
 dnspython
